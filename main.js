@@ -13,9 +13,9 @@ app.use('/api/tasks', taskRoutes);
 const port =  process.env.PORT || 5000;
 app.get('/User',async function(req,res){
     try{
-        const newUser= req.body;
-        const result = await newUser.save();
-        res.status(200).json(result);
+        const newUser= await User.find();
+        // const result = await newUser.save();
+        res.status(200).json(newUser);
         
     }catch(err){
         console.log('error');
