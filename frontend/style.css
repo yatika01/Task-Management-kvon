@@ -1,0 +1,52 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #FEFDED;
+  color: #333;
+  transition: background-color 0.3s, color 0.3s;
+}
+.navbar {
+  background-color: #FA7070;
+  padding: 1rem;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-size: 2rem;
+  color: #090808;
+  font-family: 'Impact';
+}
+
+.btn-dark-mode {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #C6EBC5;
+  color: #333;
+  cursor: pointer;
+}
+
+.btn-dark-mode:hover {
+  background-color: #A1C398;
+}
+/* Dark Mode Styles */
+body.dark-mode {
+  background-color: #333;
+  color: #fff;
+}
+
+body.dark-mode .navbar {
+  background-color: #A1C398;
+}
+
+body.dark-mode .btn-dark-mode {
+  background-color: #FA7070;
+  color: #fff;
+}
+
+body.dark-mode .btn-dark-mode:hover {
+  background-color: #C6EBC5;
+}

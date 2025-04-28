@@ -1,12 +1,18 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
+const cors = require('cors');
 const User = require('./models/user');
 const authRoutes = require('./routes/auth');
 const taskRoutes = require('./routes/task');
 
 const app = express();
 app.use(express.json());  // to parse JSON in request body
+app.use(cors({
+    origin:['http://127.0.0.1:5500','http://localhost:5500'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
@@ -22,6 +28,7 @@ app.get('/User',async function(req,res){
         res.status(500).json({error:'server error'});
     }
 });
+
 //mongodb connection
 mongoose.connect(process.env.MONGO_URI)
 .then(()=> console.log('mongodb connected'))
