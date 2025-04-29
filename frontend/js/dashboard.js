@@ -140,7 +140,7 @@ document.getElementById('editTaskForm').addEventListener('submit', async (e) => 
 
   try {
     await fetch(`https://task-management-kvon.onrender.com/api/tasks/${taskId}`, {
-      method: 'PATCH',
+      method: 'UPDATE',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
