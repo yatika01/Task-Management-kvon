@@ -38,11 +38,16 @@ async function fetchTasks() {
       }
     });
     const data = await res.json();
+    console.log(data);
     // decode token to get user role
     const decoded = JSON.parse(atob(token.split('.')[1]));
     role = decoded.role;
-    displayTasks(data);
 
+    if (Array.isArray(data.tasks)) {
+      displayTasks(data.tasks); // Ensure you're sending an array
+    } else {
+      console.error("Tasks not an array:", data);
+    }
   } catch (error) {
     console.error('Error fetching tasks:', error);
   }
