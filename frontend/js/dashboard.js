@@ -22,7 +22,9 @@ const createTaskBtn = document.getElementById('createTaskBtn');
 
 let page = 1;
 const limit = 5;
+let totalPages= 1;
 let role = '';
+let currentUserId = '';
 const token = localStorage.getItem('token');
 if (!token) {
   console.error('No token found. User must login first.');
@@ -38,35 +40,54 @@ async function fetchTasks() {
       }
     });
     const data = await res.json();
-    // console.log(data);
+    console.log("Fetched data:", data);
 
-    // decode token to get user role
+    totalPages = data.totalPages;
+      
     const decoded = JSON.parse(atob(token.split('.')[1]));
     role = decoded.role;
+    currentUserId = decoded.userId;
 
-      displayTasks(data); 
+    displayTasks(data);
+
+    document.getElementById('prevPage').disabled = page === 1;
+    document.getElementById('nextPage').disabled = page === totalPages;
   } catch (error) {
     console.error('Error fetching tasks:', error);
   }
 }
 
 function displayTasks(tasks) {
+  if (!Array.isArray(tasks)) {
+    console.error("Invalid data passed to displayTasks, expected an array of tasks:", tasks);
+    return;
+  }
   const container = document.getElementById('taskContainer');
   container.innerHTML = '';
-
-  tasks.forEach(task => {
+  const getPriorityColor = (priority) => {
+    const p = priority.toLowerCase();
+    if (p === 'high') return 'danger';
+    if (p === 'medium') return 'warning';
+    if (p === 'low') return 'success';
+    return 'secondary';
+  };
+  
+tasks.forEach(task => {
     const card = document.createElement('div');
     card.className = 'col-md-4 mb-4';
     card.innerHTML = `
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100 shadow-sm rounded-3 border-light">
         <div class="card-body">
-          <h5 class="card-title">${task.title}</h5>
+          <h5 class="card-title text-success" style="text-decoration-line:underline;">${task.title}</h5>
           <p class="card-text">${task.description}</p>
-          <p><strong>Priority:</strong> ${task.priority}</p>
+          <p><strong>Priority:</strong> <span class="badge bg-${getPriorityColor(task.priority)}">${task.priority.charAt(0).toUpperCase() + task.priority.slice(1).toLowerCase()}</span></p>
           <p><strong>Status:</strong> ${task.status}</p>
           <p><strong>Due:</strong> ${new Date(task.dueDate).toLocaleDateString()}</p>
           ${role === 'admin' || task.creatorId === currentUserId ? `
-            <button class="btn btn-warning btn-sm" onclick="openEditModal('${task._id}', '${task.title}', '${task.description}', '${task.priority}', '${task.status}', '${task.dueDate}')">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="openEditModal('${task._id}', '${task.title}', '${task.description}', '${task.priority}', '${task.status}', '${task.dueDate}')">Edit</button>
+           ${role === 'admin' ? `
+          <button class="btn btn-danger btn-sm ms-2" onclick="deleteTask('${task._id}')">Delete</button>
+           ` : ''}
           ` : ''}
           </div>
       </div>
@@ -140,7 +161,7 @@ document.getElementById('editTaskForm').addEventListener('submit', async (e) => 
 
   try {
     await fetch(`https://task-management-kvon.onrender.com/api/tasks/${taskId}`, {
-      method: 'UPDATE',
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
@@ -155,4 +176,36 @@ document.getElementById('editTaskForm').addEventListener('submit', async (e) => 
     console.error('Error updating task:', error);
   }
 });
+
+//delete task
+async function deleteTask(taskId) {
+  const confirmed = confirm("Are you sure you want to delete this task?");
+  if (!confirmed) return;
+
+  try {
+    await fetch(`https://task-management-kvon.onrender.com/api/tasks/${taskId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    fetchTasks(); 
+  } catch (error) {
+    console.error('Error deleting task:', error);
+  }
+}
+
+document.getElementById('prevPage').addEventListener('click', () => {
+  if (page > 1) {
+    page--;
+    fetchTasks();
+  }
+});
+document.getElementById('nextPage').addEventListener('click', () => {
+  if (page < totalPages) {
+    page++;
+    fetchTasks();
+  }
+});
 fetchTasks();
+

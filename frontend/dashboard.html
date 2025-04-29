@@ -39,7 +39,7 @@
 
   <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 style="font-family: 'Georgia'; font-weight: bold;">Your Tasks</h2>
+      <h2 style="font-family: 'Georgia'; font-weight: bold; text-decoration-line: underline;">Your Tasks</h2>
       <button id="createTaskBtn" class="btn btn-success">+ Create New Task</button>
     </div>
 
@@ -47,11 +47,11 @@
       <!-- Task Cards will be inserted dynamically -->
     </div>
     
-    <!-- <div class="d-flex justify-content-center my-4">
-      <button id="prevPage" class="btn btn-outline-secondary me-2">Previous</button>
-      <button id="nextPage" class="btn btn-outline-secondary">Next</button>
+    <div class="d-flex justify-content-center my-4">
+      <button id="prevPage" class="btn btn-outline-dark me-2">Previous</button>
+      <button id="nextPage" class="btn btn-outline-dark">Next</button>
     </div>
-  </div> -->
+  </div>
 
 <!-- Create Task Modal -->
 <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
@@ -72,7 +72,7 @@
             <textarea class="form-control" id="description" rows="3" required></textarea>
           </div>
           <div class="mb-3">
-            <label for="priority" class="form-label">Priority</label>
+            <label for="priority" class="form-label ">Priority</label>
             <input type="text" class="form-control" id="priority" required>
           </div>
           <div class="mb-3">
@@ -121,7 +121,7 @@
             <label for="editTaskDueDate" class="form-label">Due Date</label>
             <input type="date" class="form-control" id="editTaskDueDate" required>
           </div>
-          <button type="submit" class="btn btn-primary">Save Changes</button>
+          <button type="submit" class="btn " style="background:#343a40; color: #fff;;">Save Changes</button>
         </form>
       </div>
     </div>
@@ -131,7 +131,6 @@
 
  
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/dashboard.js"></script>
 </body>
 </html>

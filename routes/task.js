@@ -23,23 +23,23 @@ router.post('/', protect , async(req,res)=>{
     }
 });
 //update
-router.put('/:id', protect, async(req,res)=>{
-    try{
-        const task = await Task.findById(req.params.id);
-        if(!task){
-            return res.status(404).json({error: 'Task not found'});
-        }
-        if(req.user.role != 'admin' && task.createdBy.toString()!== req.user.id){
-            return res.status(403).json({error:'you are unauthorized to update the task'});
-        }
-        const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body,{
-            new: true,
-        });
-        res.json(updatedTask);
-    }catch(err){
-        res.status(500).json({error:'Failed to update task'});
-    }
-});
+// router.put('/:id', protect, async(req,res)=>{
+//     try{
+//         const task = await Task.findById(req.params.id);
+//         if(!task){
+//             return res.status(404).json({error: 'Task not found'});
+//         }
+//         if(req.user.role != 'admin' && task.createdBy.toString()!== req.user.id){
+//             return res.status(403).json({error:'you are unauthorized to update the task'});
+//         }
+//         const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body,{
+//             new: true,
+//         });
+//         res.json(updatedTask);
+//     }catch(err){
+//         res.status(500).json({error:'Failed to update task'});
+//     }
+// });
 
 //delete
 router.delete('/:id', protect, authorizedRoles('admin'), async (req, res) => {
@@ -90,8 +90,14 @@ router.get('/', protect, async (req, res) => {
         .skip((page - 1) * limit)
         .limit(Number(limit))
         .sort({ dueDate: 1 });
+      
+        const totalTasks = await Task.countDocuments(filter); 
+        const totalPages = Math.ceil(totalTasks / limit);
   
-      res.json(tasks);
+      res.json({
+        tasks,
+        totalPages
+      });
     } catch (err) {
       res.status(500).json({ error: 'Failed to get tasks' });
     }

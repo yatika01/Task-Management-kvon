@@ -15,9 +15,9 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
-// app.options('*', cors(corsOptions)); 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
+
 const port =  process.env.PORT || 5000;
 app.get('/User',async function(req,res){
     try{

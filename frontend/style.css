@@ -50,3 +50,42 @@ body.dark-mode .btn-dark-mode {
 body.dark-mode .btn-dark-mode:hover {
   background-color: #C6EBC5;
 }
+
+/* Style for the task creation modal */
+.modal-content {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.modal-header {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.modal-body {
+  font-family: 'Arial', sans-serif;
+}
+
+.modal-footer {
+  background-color: #f1f1f1;
+}
+
+.modal-footer .btn {
+  border-radius: 5px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+}
+
+.form-label {
+  font-weight: bold;
+  color: #333;
+}
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
