@@ -39,6 +39,7 @@ async function fetchTasks() {
     });
     const data = await res.json();
     console.log(data);
+
     // decode token to get user role
     const decoded = JSON.parse(atob(token.split('.')[1]));
     role = decoded.role;
@@ -53,112 +54,24 @@ async function fetchTasks() {
   }
 }
 
-// Display tasks on the page
 function displayTasks(tasks) {
-  taskContainer.innerHTML = '';
+  const container = document.getElementById('taskContainer');
+  container.innerHTML = '';
+
   tasks.forEach(task => {
     const card = document.createElement('div');
-    card.className = 'col-md-4';
+    card.className = 'col-md-4 mb-4';
     card.innerHTML = `
-      <div class="card mb-4" style="background:#A1C398">
+      <div class="card h-100 shadow-sm">
         <div class="card-body">
           <h5 class="card-title">${task.title}</h5>
           <p class="card-text">${task.description}</p>
           <p><strong>Priority:</strong> ${task.priority}</p>
           <p><strong>Status:</strong> ${task.status}</p>
           <p><strong>Due:</strong> ${new Date(task.dueDate).toLocaleDateString()}</p>
-          <button class="btn btn-warning btn-sm" onclick="openEditModal('${task._id}', '${task.title}', '${task.description}', '${task.priority}', '${task.status}', '${task.dueDate}')">Edit</button>
-          ${role === 'admin' ? `<button class="btn btn-danger btn-sm" onclick="deleteTask('${task._id}')">Delete</button>` : ''}
         </div>
       </div>
     `;
-    taskContainer.appendChild(card);
+    container.appendChild(card);
   });
 }
-
-// Pagination buttons
-prevPageBtn.addEventListener('click', () => {
-  if (page > 1) {
-    page--;
-    fetchTasks();
-  }
-});
-
-nextPageBtn.addEventListener('click', () => {
-  page++;
-  fetchTasks();
-});
-
-// Create New Task
-createTaskBtn.addEventListener('click', () => {
-  const createModal = new bootstrap.Modal(document.getElementById('createTaskModal'));
-  createModal.show();
-});
-
-// Open Edit Task Modal
-function openEditModal(taskId, title, description, priority, status, dueDate) {
-  document.getElementById('editTaskId').value = taskId;
-  document.getElementById('editTaskTitle').value = title;
-  document.getElementById('editTaskDescription').value = description;
-  document.getElementById('editTaskPriority').value = priority;
-  document.getElementById('editTaskStatus').value = status;
-  document.getElementById('editTaskDueDate').value = dueDate.split('T')[0];
-
-  const editModal = new bootstrap.Modal(document.getElementById('editTaskModal'));
-  editModal.show();
-}
-
-// Edit Task
-document.getElementById('editTaskForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const taskId = document.getElementById('editTaskId').value;
-  const title = document.getElementById('editTaskTitle').value;
-  const description = document.getElementById('editTaskDescription').value;
-  const priority = document.getElementById('editTaskPriority').value;
-  const status = document.getElementById('editTaskStatus').value;
-  const dueDate = document.getElementById('editTaskDueDate').value;
-
-  try {
-    await fetch(`https://task-management-kvon.onrender.com/api/tasks/${taskId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ title, description, priority, status, dueDate })
-    });
-
-    const editModal = bootstrap.Modal.getInstance(document.getElementById('editTaskModal'));
-    editModal.hide();
-    fetchTasks();
-  } catch (error) {
-    console.error('Error updating task:', error);
-  }
-});
-
-// Create Task
-document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const title = document.getElementById('newTaskTitle').value;
-  const description = document.getElementById('newTaskDescription').value;
-  const priority = document.getElementById('newTaskPriority').value;
-  const status = document.getElementById('newTaskStatus').value;
-  const dueDate = document.getElementById('newTaskDueDate').value;
-
-  try {
-    await fetch('https://task-management-kvon.onrender.com/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ title, description, priority, status, dueDate })
-    });
-
-    const createModal = bootstrap.Modal.getInstance(document.getElementById('createTaskModal'));
-    createModal.hide();
-    fetchTasks();
-  } catch (error) {
-    console.error('Error creating task:', error);
-  }
-});
