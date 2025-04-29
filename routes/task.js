@@ -53,6 +53,24 @@ router.delete('/:id', protect, authorizedRoles('admin'), async (req, res) => {
       res.status(500).json({ error: 'Failed to delete task' });
     }
 });
+//Patch
+router.patch('/:id', protect, async (req, res) => {
+  try {
+    const task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+
+    if (req.user.role !== 'admin' && task.createdBy.toString() !== req.user.id) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    Object.assign(task, req.body);
+    const updatedTask = await task.save();
+
+    res.json(updatedTask);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update task' });
+  }
+});
 
 //filtering and pagination
 router.get('/', protect, async (req, res) => {
