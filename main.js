@@ -8,14 +8,16 @@ const taskRoutes = require('./routes/task');
 
 const app = express();
 app.use(express.json());  // to parse JSON in request body
-app.use(cors({
-    origin:['http://127.0.0.1:5500','http://localhost:5500'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+
+const corsOptions = {
+  origin: 'http://127.0.0.1:5500',  // Your frontend origin
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],  // Allow PATCH method
+  credentials: true,
+};
+app.use(cors(corsOptions));
+// app.options('*', cors(corsOptions)); 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
-
 const port =  process.env.PORT || 5000;
 app.get('/User',async function(req,res){
     try{
