@@ -73,7 +73,7 @@ body.dark-mode .btn-dark-mode:hover {
   font-size: 1.5rem;
 }
 
-.form-label {
+.modal .form-label {
   font-weight: bold;
   color: #333;
 }
@@ -91,4 +91,7 @@ body.dark-mode .btn-dark-mode:hover {
 body.dark-mode .btn-outline-dark {
   border-color: #f8f9fa; 
   color: #f8f9fa; 
+}
+.dashboard .form-label{
+  color: #f1f1f1;
 }

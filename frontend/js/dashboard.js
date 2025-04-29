@@ -33,7 +33,7 @@ async function fetchTasks(filters={}) {
       limit,
       ...filters
     });
-    const res = await fetch(`https://task-management-kvon.onrender.com/api/tasks?page=${page}&limit=${limit}`, {
+    const res = await fetch(`https://task-management-kvon.onrender.com/api/tasks?${params.toString()}`, {
       method:'GET',
       headers: {
         'Content-Type': 'application/json',
