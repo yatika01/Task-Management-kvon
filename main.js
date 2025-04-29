@@ -10,8 +10,8 @@ const app = express();
 app.use(express.json());  // to parse JSON in request body
 
 const corsOptions = {
-  origin: 'http://127.0.0.1:5500',  // Your frontend origin
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],  // Allow PATCH method
+  origin: 'http://127.0.0.1:5500', 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],  
   credentials: true,
 };
 app.use(cors(corsOptions));

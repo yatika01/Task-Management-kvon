@@ -5,7 +5,7 @@ const toggleLink = document.getElementById('toggle-link');
 const usernameField = document.getElementById('username-field');
 const submitBtn = document.getElementById('submit-btn');
 
-let isLogin = true; // starts with Login mode
+let isLogin = true; 
 
 toggleLink.addEventListener('click', (e) => {
   e.preventDefault();
@@ -48,7 +48,7 @@ authForm.addEventListener('submit', async (e) => {
         localStorage.setItem('token',data.token);
       }
       alert(data.message || "Success");
-      window.location.href = "dashboard.html"; // redirect to dashboard
+      window.location.href = "dashboard.html"; 
     } else {
       alert(data.error || "Something went wrong");
     }

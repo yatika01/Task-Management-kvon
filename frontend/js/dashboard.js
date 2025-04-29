@@ -5,15 +5,11 @@ darkModeToggle.addEventListener('click', () => {
 
 // Logout Button
 const logoutButton = document.getElementById('logout-button');
-
 logoutButton.addEventListener('click', () => {
-  // Remove token from localStorage
   localStorage.removeItem('authToken');
-  
   // Redirect to login page
-  window.location.href = 'index.html'; // Adjust to your login page
+  window.location.href = 'index.html'; 
 });
-
 
 const taskContainer = document.getElementById('taskContainer');
 const prevPageBtn = document.getElementById('prevPage');
@@ -21,7 +17,7 @@ const nextPageBtn = document.getElementById('nextPage');
 const createTaskBtn = document.getElementById('createTaskBtn');
 
 let page = 1;
-const limit = 5;
+const limit = 3;
 let totalPages= 1;
 let role = '';
 let currentUserId = '';
@@ -30,8 +26,13 @@ if (!token) {
   console.error('No token found. User must login first.');
 }
 // Fetch tasks from API
-async function fetchTasks() {
+async function fetchTasks(filters={}) {
   try {
+    const params = new URLSearchParams({
+      page,
+      limit,
+      ...filters
+    });
     const res = await fetch(`https://task-management-kvon.onrender.com/api/tasks?page=${page}&limit=${limit}`, {
       method:'GET',
       headers: {
@@ -48,7 +49,7 @@ async function fetchTasks() {
     role = decoded.role;
     currentUserId = decoded.userId;
 
-    displayTasks(data);
+    displayTasks(data.tasks);
 
     document.getElementById('prevPage').disabled = page === 1;
     document.getElementById('nextPage').disabled = page === totalPages;
@@ -57,11 +58,30 @@ async function fetchTasks() {
   }
 }
 
+document.getElementById('apply-filters').addEventListener('click', () => {
+  const status = document.getElementById('filter-status').value;
+  const priority = document.getElementById('filter-priority').value;
+  const dueDate = document.getElementById('filter-dueDate').value;
+
+  const filters = {};
+  if (status) filters.status = status;
+  if (priority) filters.priority = priority;
+  if (dueDate) filters.dueDate = dueDate;
+
+  page = 1; // Reset to first page when applying filters
+  fetchTasks(filters);
+});
+
+document.getElementById('clear-filters').addEventListener('click', () => {
+  document.getElementById('filter-status').value = '';
+  document.getElementById('filter-priority').value = '';
+  document.getElementById('filter-dueDate').value = '';
+
+  page = 1;
+  fetchTasks(); // Fetch without filters
+});
+
 function displayTasks(tasks) {
-  if (!Array.isArray(tasks)) {
-    console.error("Invalid data passed to displayTasks, expected an array of tasks:", tasks);
-    return;
-  }
   const container = document.getElementById('taskContainer');
   container.innerHTML = '';
   const getPriorityColor = (priority) => {
@@ -127,7 +147,8 @@ createTaskForm.addEventListener('submit', async (e) => {
     if (res.ok) {
       createModal.hide();
       createTaskForm.reset();
-      fetchTasks(); // reload task list
+      fetchTasks(); 
+      showNotification(); 
     } else {
       alert(data.message || 'Failed to create task');
     }
@@ -172,6 +193,7 @@ document.getElementById('editTaskForm').addEventListener('submit', async (e) => 
     const editModal = bootstrap.Modal.getInstance(document.getElementById('editTaskModal'));
     editModal.hide();
     fetchTasks();
+    showNotification(); 
   } catch (error) {
     console.error('Error updating task:', error);
   }
@@ -190,6 +212,7 @@ async function deleteTask(taskId) {
       }
     });
     fetchTasks(); 
+    showNotification(); 
   } catch (error) {
     console.error('Error deleting task:', error);
   }
@@ -207,5 +230,12 @@ document.getElementById('nextPage').addEventListener('click', () => {
     fetchTasks();
   }
 });
-fetchTasks();
 
+fetchTasks();
+function showNotification() {
+  const notif = document.getElementById('notification');
+  notif.style.display = 'block';
+  setTimeout(() => {
+    notif.style.display = 'none';
+  }, 10000); 
+}

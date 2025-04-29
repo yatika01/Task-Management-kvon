@@ -32,16 +32,13 @@ body {
 .btn-dark-mode:hover {
   background-color: #A1C398;
 }
-/* Dark Mode Styles */
 body.dark-mode {
   background-color: #333;
   color: #fff;
 }
-
 body.dark-mode .navbar {
   background-color: #A1C398;
 }
-
 body.dark-mode .btn-dark-mode {
   background-color: #FA7070;
   color: #fff;
@@ -51,12 +48,10 @@ body.dark-mode .btn-dark-mode:hover {
   background-color: #C6EBC5;
 }
 
-/* Style for the task creation modal */
 .modal-content {
   background-color: #f8f9fa;
   border-radius: 8px;
 }
-
 .modal-header {
   background-color: #343a40;
   color: #fff;
@@ -88,4 +83,12 @@ body.dark-mode .btn-dark-mode:hover {
 
 .card:hover {
   transform: scale(1.05);
+}
+.btn-outline-dark {
+  border-color: #343a40;
+  color: #343a40;
+}
+body.dark-mode .btn-outline-dark {
+  border-color: #f8f9fa; 
+  color: #f8f9fa; 
 }

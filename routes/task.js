@@ -75,7 +75,7 @@ router.patch('/:id', protect, async (req, res) => {
 //filtering and pagination
 router.get('/', protect, async (req, res) => {
     try {
-      const { status, priority, dueDate, page = 1, limit = 5 } = req.query;
+      const { status, priority, dueDate, page = 1, limit = 3 } = req.query;
   
       let filter = {};
       if (req.user.role !== 'admin') {
