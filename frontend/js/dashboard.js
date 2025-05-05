@@ -23,6 +23,7 @@ let role = '';
 let currentUserId = '';
 const token = localStorage.getItem('token');
 if (!token) {
+  window.location.href = 'index.html';
   console.error('No token found. User must login first.');
 }
 // Fetch tasks from API
@@ -68,7 +69,7 @@ document.getElementById('apply-filters').addEventListener('click', () => {
   if (priority) filters.priority = priority;
   if (dueDate) filters.dueDate = dueDate;
 
-  page = 1; // Reset to first page when applying filters
+  page = 1; 
   fetchTasks(filters);
 });
 
@@ -78,7 +79,7 @@ document.getElementById('clear-filters').addEventListener('click', () => {
   document.getElementById('filter-dueDate').value = '';
 
   page = 1;
-  fetchTasks(); // Fetch without filters
+  fetchTasks(); 
 });
 
 function displayTasks(tasks) {
